@@ -979,7 +979,8 @@ window.elFinder = function(node, opts) {
 		// quiet abort not completed "open" requests
 		if (cmd == 'open') {
 			while ((_xhr = queue.pop())) {
-				if (!_xhr.isRejected() && !_xhr.isResolved()) {
+				//if (!_xhr.isRejected() && !_xhr.isResolved()) {
+				if (!(_xhr.state() == "rejected") && !(_xhr.state() == "resolved")) {
 					_xhr.quiet = true;
 					_xhr.abort();
 				}
@@ -7357,7 +7358,8 @@ elFinder.prototype.commands.copy = function() {
 			}
 		});
 		
-		return dfrd.isRejected() ? dfrd : dfrd.resolve(fm.clipboard(this.hashes(hashes)));
+		//return dfrd.isRejected() ? dfrd : dfrd.resolve(fm.clipboard(this.hashes(hashes)));
+		return (dfrd.state() == "rejected") ? dfrd : dfrd.resolve(fm.clipboard(this.hashes(hashes)));
 	}
 
 }
@@ -7402,7 +7404,8 @@ elFinder.prototype.commands.cut = function() {
 			}
 		});
 		
-		return dfrd.isRejected() ? dfrd : dfrd.resolve(fm.clipboard(this.hashes(hashes), true));
+		//return dfrd.isRejected() ? dfrd : dfrd.resolve(fm.clipboard(this.hashes(hashes), true));
+		return (dfrd.state() == "rejected") ? dfrd : dfrd.resolve(fm.clipboard(this.hashes(hashes), true));
 	}
 
 }
@@ -7519,7 +7522,8 @@ elFinder.prototype.commands.duplicate = function() {
 			}
 		});
 		
-		if (dfrd.isRejected()) {
+		//if (dfrd.isRejected()) {
+		if (dfrd.state() == "rejected") {
 			return dfrd;
 		}
 		
@@ -7826,7 +7830,8 @@ elFinder.prototype.commands.extract = function() {
 				syncOnFail : true
 			})
 			.fail(function(error) {
-				if (!dfrd.isRejected()) {
+				//if (!dfrd.isRejected()) {
+				if (!(dfrd.state() == "rejected")) {
 					dfrd.reject(error);
 				}
 			})
@@ -8457,7 +8462,8 @@ elFinder.prototype.commands.netmount = function() {
 						destroyOnClose : true,
 						close          : function() { 
 							delete self.dialog; 
-							!dfrd.isResolved() && !dfrd.isRejected() && dfrd.reject();
+							//!dfrd.isResolved() && !dfrd.isRejected() && dfrd.reject();
+							!(dfrd.state() == "resolved") && !(dfrd.state() == "rejected") && dfrd.reject();
 						},
 						buttons        : {}
 					},
@@ -8826,7 +8832,8 @@ elFinder.prototype.commands.paste = function() {
 			}
 		});
 
-		if (dfrd.isRejected()) {
+		//if (dfrd.isRejected()) {
+		if (dfrd.state() == "rejected") {
 			return dfrd;
 		}
 
@@ -9363,7 +9370,8 @@ elFinder.prototype.commands.quicklook.plugins = [
 
 				// stop loading on change file if not loaded yet
 				preview.one('change', function() {
-					if (!jqxhr.isResolved() && !jqxhr.isRejected()) {
+					//if (!jqxhr.isResolved() && !jqxhr.isRejected()) {
+					if (!(jqxhr.state() == "resolved") && !(jqxhr.state() == "rejected")) {
 						jqxhr.reject();
 					}
 				});
@@ -9404,7 +9412,8 @@ elFinder.prototype.commands.quicklook.plugins = [
 				
 				// stop loading on change file if not loadin yet
 				preview.one('change', function() {
-					if (!jqxhr.isResolved() && !jqxhr.isRejected()) {
+					//if (!jqxhr.isResolved() && !jqxhr.isRejected()) {
+					if (!(jqxhr.state() == "resolved") && !(jqxhr.state() == "rejected")) {
 						jqxhr.reject();
 					}
 				});
@@ -10634,7 +10643,8 @@ elFinder.prototype.commands.rm = function() {
 			}
 		});
 
-		if (!dfrd.isRejected()) {
+		//if (!dfrd.isRejected()) {
+		if (!(dfrd.state() == "rejected")) {
 			files = this.hashes(hashes);
 			
 			fm.confirm({
