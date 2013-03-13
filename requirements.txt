@@ -1,4 +1,4 @@
 yawd-elfinder
 Django>=1.4
-PIL
+pillow
 python-magic
